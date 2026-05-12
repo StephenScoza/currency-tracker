@@ -1,0 +1,44 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "7000:7000"
+    environment:
+      VITE_API_URL: http://localhost:7001
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "7001:7001"
+    env_file:
+      - ./backend/.env
+    environment:
+      PORT: 7001
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["future"]
+    ports:
+      - "7002:5432"
+    environment:
+      POSTGRES_DB: currency_tracker
+      POSTGRES_USER: currency_tracker
+      POSTGRES_PASSWORD: currency_tracker
+
+  redis:
+    image: redis:7-alpine
+    profiles: ["future"]
+    ports:
+      - "7003:6379"
