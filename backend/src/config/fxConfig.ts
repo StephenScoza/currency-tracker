@@ -30,6 +30,18 @@ export const fxCacheFileName = () =>
 export const providerUsageCacheTtlMs = () =>
   toPositiveNumber(process.env.PROVIDER_USAGE_CACHE_TTL_MS, 60 * 60 * 1000);
 
+export const logDirectory = () =>
+  process.env.LOG_DIR ?? `${process.env.ALERT_STORAGE_DIR ?? "./runtime"}/logs`;
+
+export const logLevel = () =>
+  process.env.LOG_LEVEL ?? "info";
+
+export const logRotationSize = () =>
+  process.env.LOG_ROTATION_SIZE ?? "10m";
+
+export const logRetentionCount = () =>
+  toPositiveNumber(process.env.LOG_RETENTION_COUNT, 7);
+
 export const latestProviderPriority = () =>
   toProviderPriority(process.env.FX_LATEST_PROVIDER_PRIORITY, [
     "twelve-data",

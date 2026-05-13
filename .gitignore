@@ -7,4 +7,5 @@ frontend/vite.config.d.ts
 frontend/vite.config.js
 backend/runtime/*.json
 backend/runtime/*.log
+backend/runtime/logs/
 .qa/

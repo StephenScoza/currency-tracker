@@ -41,7 +41,11 @@ export const DashboardFooter = () => (
 
     <div className="mt-6 flex flex-col gap-2 border-t border-white/10 pt-4 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
       <span>© {new Date().getFullYear()} Reaisify. Built for clarity, not financial advice.</span>
-      <span>Provider quotes, fees, and exchange rates can change before transfer execution.</span>
+      <span>
+        <a href="#/admin" className="text-slate-300 transition hover:text-mint">Admin console</a>
+        <span className="mx-2 text-slate-600">/</span>
+        Provider quotes, fees, and exchange rates can change before transfer execution.
+      </span>
     </div>
   </footer>
 );

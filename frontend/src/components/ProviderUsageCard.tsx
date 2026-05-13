@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getProviderUsage } from "../services/fxService";
+import { getProviderUsage, refreshProviderUsage } from "../services/fxService";
 import type { ProviderUsageSnapshot } from "../types/currency";
 import { Icon } from "./Icon";
 import { InfoPopover } from "./InfoPopover";
@@ -12,8 +12,14 @@ const formatUsageTimestamp = (timestamp?: string) => {
   return new Date(timestamp).toLocaleString();
 };
 
-export const ProviderUsageCard = () => {
+interface ProviderUsageCardProps {
+  showRefreshAction?: boolean;
+}
+
+export const ProviderUsageCard = ({ showRefreshAction = false }: ProviderUsageCardProps) => {
   const [usage, setUsage] = useState<ProviderUsageSnapshot | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -23,10 +29,12 @@ export const ProviderUsageCard = () => {
         const data = await getProviderUsage();
         if (isActive) {
           setUsage(data);
+          setError(null);
         }
-      } catch {
+      } catch (loadError) {
         if (isActive) {
           setUsage(null);
+          setError(loadError instanceof Error ? loadError.message : "Unable to load provider usage.");
         }
       }
     };
@@ -44,6 +52,25 @@ export const ProviderUsageCard = () => {
   const left = usage?.apiCreditsLeft;
   const limit = usage?.apiCreditLimit;
   const usagePercent = used !== undefined && limit ? Math.min(100, Math.round((used / limit) * 100)) : null;
+
+  const refreshUsage = async () => {
+    const confirmed = window.confirm(
+      "Refresh Twelve Data usage now? This provider endpoint can cost 1 API credit.",
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setIsRefreshing(true);
+      setError(null);
+      setUsage(await refreshProviderUsage());
+    } catch (refreshError) {
+      setError(refreshError instanceof Error ? refreshError.message : "Unable to refresh provider usage.");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 text-ink shadow-glow">
@@ -63,8 +90,20 @@ export const ProviderUsageCard = () => {
             Best-known quota data captured from backend-only provider calls.
           </p>
         </div>
-        <div className="rounded-full border border-slate-200 bg-sand px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-slatebrand">
-          {usage?.source === "response-headers" ? "No extra credit" : usage?.source ?? "Waiting"}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="rounded-full border border-slate-200 bg-sand px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-slatebrand">
+            {usage?.source === "response-headers" ? "No extra credit" : usage?.source ?? "Waiting"}
+          </div>
+          {showRefreshAction ? (
+            <button
+              type="button"
+              onClick={() => void refreshUsage()}
+              disabled={isRefreshing}
+              className="rounded-full border border-danger/20 bg-red-50 px-3 py-1 text-xs font-semibold text-danger transition hover:border-danger/40 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isRefreshing ? "Refreshing..." : "Refresh usage"}
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -95,6 +134,12 @@ export const ProviderUsageCard = () => {
       <div className="mt-4 text-xs leading-5 text-slate-500">
         Updated {formatUsageTimestamp(usage?.updatedAt)}. Manual provider usage refreshes are available via the backend, but are not called automatically because they can spend an API credit.
       </div>
+
+      {error ? (
+        <div className="mt-3 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
+          {error}
+        </div>
+      ) : null}
     </section>
   );
 };

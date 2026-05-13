@@ -4,7 +4,6 @@ import { Converter } from "../components/Converter";
 import { DashboardHeader } from "../components/DashboardHeader";
 import { DashboardFooter } from "../components/DashboardFooter";
 import { ExchangeChart } from "../components/ExchangeChart";
-import { ProviderUsageCard } from "../components/ProviderUsageCard";
 import { RateCard } from "../components/RateCard";
 import { SignalCard } from "../components/SignalCard";
 import { SystemStatusStrip } from "../components/SystemStatusStrip";
@@ -68,10 +67,7 @@ export const Dashboard = () => {
 
         <div className="grid min-w-0 gap-6 xl:grid-cols-2">
           <Converter pair={series.pair} rate={series.snapshot.currentRate} />
-          <div className="space-y-6">
-            <ProviderUsageCard />
-            <AlertRuleForm pairSymbol={series.pair.symbol} />
-          </div>
+          <AlertRuleForm pairSymbol={series.pair.symbol} />
         </div>
 
         <DashboardFooter />

@@ -81,6 +81,17 @@ export const getLatestRate = async (pairSymbol: string): Promise<FxLatest> => {
   return latest;
 };
 
+export const refreshLatestRate = async (pairSymbol: string): Promise<FxLatest> => {
+  const latest = await withProviderFallback(
+    getProviders(latestProviderPriority()),
+    (provider) => provider.getLatestRate(pairSymbol),
+    "All latest FX providers failed during manual refresh; falling back to mock provider.",
+  );
+
+  cacheService.set(`latest:${pairSymbol}`, latest, latestCacheTtlMs());
+  return latest;
+};
+
 export const getHistoricalRates = async (
   pairSymbol: string,
   range: TimeRange,

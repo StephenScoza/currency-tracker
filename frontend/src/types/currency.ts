@@ -96,6 +96,22 @@ export interface ProviderUsageSnapshot {
   note?: string;
 }
 
+export interface RuntimeLogEntry {
+  time?: number;
+  level?: number;
+  msg?: string;
+  component?: string;
+  req?: {
+    method?: string;
+    url?: string;
+  };
+  res?: {
+    statusCode?: number;
+  };
+  responseTime?: number;
+  [key: string]: unknown;
+}
+
 export interface FxHistory {
   pair: CurrencyPair;
   points: FxPoint[];

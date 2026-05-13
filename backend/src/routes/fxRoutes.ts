@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getHistoricalRates, getLatestRate, getSignal } from "../services/fxService.js";
+import { getHistoricalRates, getLatestRate, getSignal, refreshLatestRate } from "../services/fxService.js";
 import type { TimeRange } from "../types/fx.js";
 
 export const fxRoutes = Router();
@@ -7,7 +7,10 @@ export const fxRoutes = Router();
 fxRoutes.get("/:pairSymbol/latest", async (request, response) => {
   try {
     const pairSymbol = request.params.pairSymbol.toLowerCase();
-    const data = await getLatestRate(pairSymbol);
+    const data =
+      request.query.refresh === "true"
+        ? await refreshLatestRate(pairSymbol)
+        : await getLatestRate(pairSymbol);
     response.json({ data });
   } catch (error) {
     response.status(500).json({

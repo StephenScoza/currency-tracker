@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { getSystemStatus } from "../services/statusService.js";
 import { getProviderUsage, refreshTwelveDataUsage } from "../services/providerUsageService.js";
+import { getRecentLogLines } from "../services/logger.js";
 
 export const statusRoutes = Router();
 
@@ -19,6 +20,26 @@ statusRoutes.get("/provider-usage", async (request, response) => {
   } catch (error) {
     response.status(500).json({
       error: error instanceof Error ? error.message : "Failed to load provider usage.",
+    });
+  }
+});
+
+statusRoutes.get("/logs", async (request, response) => {
+  try {
+    const limit = Number(request.query.limit ?? 100);
+    const lines = await getRecentLogLines(limit);
+    response.json({
+      data: lines.map((line) => {
+        try {
+          return JSON.parse(line) as unknown;
+        } catch {
+          return { message: line };
+        }
+      }),
+    });
+  } catch (error) {
+    response.status(500).json({
+      error: error instanceof Error ? error.message : "Failed to load logs.",
     });
   }
 });

@@ -45,6 +45,7 @@ currency-tracker/
 - Real-time USD to BRL conversion calculator with estimated and custom transfer fee comparisons
 - Signal engine with recommendation, confidence, reasoning, percentile, and trend direction
 - Backend-managed alert rules with durable storage and Discord webhook support
+- Admin console at `/#/admin` for provider credits, cache status, Discord tests, alert logs, and guarded manual refresh controls
 - Reusable pair-oriented architecture for future currency pairs like `usd-eur` and `usd-gbp`
 - Backend provider abstraction with Twelve Data as the primary near-real-time source
 - In-memory TTL caching for latest and historical provider responses
@@ -91,6 +92,10 @@ FX_HISTORY_CACHE_TTL_MS=86400000
 FX_CACHE_PERSISTENCE=true
 FX_CACHE_FILE_NAME=fx-cache.json
 PROVIDER_USAGE_CACHE_TTL_MS=3600000
+LOG_DIR=./runtime/logs
+LOG_LEVEL=info
+LOG_ROTATION_SIZE=10m
+LOG_RETENTION_COUNT=7
 ALERT_POLL_INTERVAL_MS=900000
 ALERT_RUN_ON_STARTUP=false
 DISCORD_WEBHOOK_URL=
@@ -153,6 +158,8 @@ Manually refreshes Twelve Data usage via the provider usage endpoint and caches 
 ### `GET /fx/usd-brl/latest`
 
 Returns the latest proxied USD/BRL rate from Twelve Data when configured, otherwise the mock provider.
+
+Add `?refresh=true` to intentionally bypass the backend cache. Use sparingly because the primary provider call may spend an API credit.
 
 ### `GET /fx/usd-brl/history?range=7D|30D|90D|1Y`
 
@@ -241,10 +248,15 @@ These defaults intentionally conserve Twelve Data free-tier credits while the ap
 
 - Alert rules are stored in `backend/runtime/alerts.json`
 - Delivery history is appended to `backend/runtime/alert-deliveries.log`
+- Backend request/application logs are persisted as rotating Pino JSONL files under `backend/runtime/logs`
 - The backend polls active rules on `ALERT_POLL_INTERVAL_MS`
 - Startup alert checks are disabled by default with `ALERT_RUN_ON_STARTUP=false` to avoid spending an API credit every container restart
 - Discord notifications fire when a rule crosses from below target to above target
 - If `DISCORD_WEBHOOK_URL` is unset, the backend still records the opportunity to the log file
+
+## Logging
+
+The backend uses Pino with `pino-roll` for structured persisted logs. Logs are written to `LOG_DIR`, rotate daily and by `LOG_ROTATION_SIZE`, and keep `LOG_RETENTION_COUNT` rotated files. The admin console reads recent entries through `GET /status/logs`.
 
 ## Transfer Fee Estimates
 

@@ -11,6 +11,7 @@ import type {
   FxHistory,
   FxLatest,
   ProviderUsageSnapshot,
+  RuntimeLogEntry,
   SignalAssessment,
   SystemStatus,
   TimeRange,
@@ -39,6 +40,11 @@ export const getLatestRate = async (pairSymbol: string): Promise<FxLatest> => {
 
     throw error;
   }
+};
+
+export const refreshLatestRate = async (pairSymbol: string): Promise<FxLatest> => {
+  const payload = await fetchJson<{ data: FxLatest }>(`/fx/${pairSymbol}/latest?refresh=true`);
+  return payload.data;
 };
 
 export const getHistoricalRates = async (pairSymbol: string, range: TimeRange): Promise<FxHistory> => {
@@ -158,6 +164,16 @@ export const getSystemStatus = async (): Promise<SystemStatus> => {
 
 export const getProviderUsage = async (): Promise<ProviderUsageSnapshot> => {
   const payload = await fetchJson<{ data: ProviderUsageSnapshot }>("/status/provider-usage");
+  return payload.data;
+};
+
+export const refreshProviderUsage = async (): Promise<ProviderUsageSnapshot> => {
+  const payload = await fetchJson<{ data: ProviderUsageSnapshot }>("/status/provider-usage?refresh=true");
+  return payload.data;
+};
+
+export const getRuntimeLogs = async (limit = 50): Promise<RuntimeLogEntry[]> => {
+  const payload = await fetchJson<{ data: RuntimeLogEntry[] }>(`/status/logs?limit=${limit}`);
   return payload.data;
 };
 
