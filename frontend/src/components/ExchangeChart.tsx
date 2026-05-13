@@ -90,8 +90,8 @@ export const ExchangeChart = ({ points, title = "USD/BRL rate path", source, upd
                 backgroundColor: "#ffffff",
                 borderRadius: "12px",
                 border: "1px solid #e2e8f0",
-              color: "#0D1B2A",
-            }}
+                color: "#0D1B2A",
+              }}
               formatter={(value: number) => [`R$ ${formatRate(value)}`, "BRL per USD"]}
               labelFormatter={(label) => formatDate(String(label))}
             />

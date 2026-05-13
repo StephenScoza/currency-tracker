@@ -28,7 +28,7 @@ $captures = @(
   @{
     Name = "mobile"
     Url = "http://localhost:7000"
-    WindowSize = "430,1400"
+    WindowSize = "430,1800"
     Output = "reaisify-mobile.png"
   },
   @{
@@ -47,7 +47,7 @@ foreach ($capture in $captures) {
     --disable-gpu `
     --no-sandbox `
     --hide-scrollbars `
-    --timeout=10000 `
+    --timeout=30000 `
     "--window-size=$($capture.WindowSize)" `
     "--screenshot=$outputPath" `
     $capture.Url | Out-Null
