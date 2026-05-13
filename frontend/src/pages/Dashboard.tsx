@@ -50,7 +50,7 @@ export const Dashboard = () => {
         </div>
 
         <section className="space-y-4">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-ink shadow-glow md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-2xl font-semibold text-ink">Historical context</h2>
               <p className="mt-1 text-sm text-slate-600">Zoom between tactical and long-range windows before deciding on a transfer.</p>
