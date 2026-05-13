@@ -7,10 +7,16 @@ interface RateCardProps {
   snapshot: FxSnapshot;
   base: string;
   quote: string;
+  source: string;
+  updatedAt: string;
 }
 
-export const RateCard = ({ snapshot, base, quote }: RateCardProps) => {
+const formatUpdatedAt = (value: string) =>
+  new Date(value).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+
+export const RateCard = ({ snapshot, base, quote, source, updatedAt }: RateCardProps) => {
   const positive = snapshot.change.amount >= 0;
+  const isLive = !source.includes("mock") && !source.includes("derived");
 
   return (
     <section className="max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
@@ -34,6 +40,18 @@ export const RateCard = ({ snapshot, base, quote }: RateCardProps) => {
           }`}
         >
           {positive ? "Improving" : "Pulling back"}
+        </span>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+        <span className={`rounded-full border px-3 py-1 ${isLive ? "border-mint/20 bg-surf text-mint" : "border-slate-200 bg-sand text-slatebrand"}`}>
+          {isLive ? "Live provider" : "Cached/mock provider"}
+        </span>
+        <span className="rounded-full border border-slate-200 bg-sand px-3 py-1 text-slatebrand">
+          Updated {formatUpdatedAt(updatedAt)}
+        </span>
+        <span className="rounded-full border border-slate-200 bg-sand px-3 py-1 text-slatebrand">
+          Source: {source}
         </span>
       </div>
 

@@ -15,9 +15,13 @@ interface ExchangeChartProps {
   points: FxPoint[];
   title?: string;
   source?: string;
+  updatedAt?: string;
 }
 
-export const ExchangeChart = ({ points, title = "USD/BRL rate path", source }: ExchangeChartProps) => (
+const formatUpdatedAt = (value?: string) =>
+  value ? new Date(value).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Unknown";
+
+export const ExchangeChart = ({ points, title = "USD/BRL rate path", source, updatedAt }: ExchangeChartProps) => (
   <section className="rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
     <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
       <div>
@@ -29,8 +33,13 @@ export const ExchangeChart = ({ points, title = "USD/BRL rate path", source }: E
         </div>
         <h3 className="mt-2 text-xl font-semibold text-ink">{title}</h3>
       </div>
-      <div className="rounded-full border border-slate-200 bg-sand px-3 py-1 text-sm font-medium text-slate-600">
-        {source?.includes("derived") ? "Cached range" : "Live range"}
+      <div className="flex flex-wrap gap-2">
+        <div className="rounded-full border border-slate-200 bg-sand px-3 py-1 text-sm font-medium text-slate-600">
+          {source?.includes("derived") ? "Cached range" : "Provider range"}
+        </div>
+        <div className="rounded-full border border-slate-200 bg-sand px-3 py-1 text-sm font-medium text-slate-600">
+          Updated {formatUpdatedAt(updatedAt)}
+        </div>
       </div>
     </div>
 

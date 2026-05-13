@@ -12,6 +12,37 @@ const palette = {
   WAIT: "bg-red-50 text-danger border-danger/25",
 };
 
+const explainPercentile = (percentile: number) => {
+  const rounded = Math.round(percentile * 100);
+  if (rounded >= 75) {
+    return `The current rate is stronger than about ${rounded}% of recent observations, which favors converting.`;
+  }
+
+  if (rounded < 40) {
+    return `The current rate is only stronger than about ${rounded}% of recent observations, so patience may help.`;
+  }
+
+  return `The current rate is near the middle of the recent range at about the ${rounded}th percentile.`;
+};
+
+const explainAverageGap = (gap: number) =>
+  gap >= 0
+    ? `The spot rate is ${gap.toFixed(4)} above its 30-day average, a positive timing signal.`
+    : `The spot rate is ${Math.abs(gap).toFixed(4)} below its 30-day average, which weakens the setup.`;
+
+const explainMomentum = (momentum: number) => {
+  const percent = (momentum * 100).toFixed(2);
+  if (momentum > 0.012) {
+    return `Short-term momentum is improving at ${percent}%, which supports a stronger signal.`;
+  }
+
+  if (momentum < -0.012) {
+    return `Short-term momentum is softening at ${percent}%, so the model is more cautious.`;
+  }
+
+  return `Momentum is mostly flat at ${percent}%, so the signal leans more on range and average position.`;
+};
+
 export const SignalCard = ({ signal }: SignalCardProps) => (
   <section className="max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
     <div className="flex min-w-0 flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -44,6 +75,17 @@ export const SignalCard = ({ signal }: SignalCardProps) => (
     </div>
 
     <p className="mt-5 text-sm leading-6 text-slate-600">{signal.reasoning}</p>
+
+    <details className="mt-4 rounded-xl border border-slate-200 bg-sand px-4 py-3">
+      <summary className="cursor-pointer text-sm font-semibold text-ink marker:text-mint">
+        Why this signal?
+      </summary>
+      <div className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
+        <p>{explainPercentile(signal.percentile)}</p>
+        <p>{explainAverageGap(signal.movingAverageGap)}</p>
+        <p>{explainMomentum(signal.momentum)}</p>
+      </div>
+    </details>
 
     <div className="mt-6 grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-3">
       <div className="min-w-0 rounded-xl border border-slate-200 bg-sand p-4">

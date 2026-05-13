@@ -14,16 +14,29 @@ import type { TimeRange } from "../types/currency";
 
 const pairSymbol = "usd-brl";
 
+const DashboardSkeleton = () => (
+  <main className="mx-auto w-full max-w-7xl px-4 py-6 md:px-6 md:py-8 xl:px-8">
+    <div className="space-y-6">
+      <div className="h-52 animate-pulse rounded-2xl border border-white/10 bg-white/80 shadow-glow" />
+      <div className="grid gap-3 md:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <div key={index} className="h-20 animate-pulse rounded-xl border border-slate-200 bg-white/80" />
+        ))}
+      </div>
+      <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <div className="h-72 animate-pulse rounded-2xl border border-slate-200 bg-white/80" />
+        <div className="h-72 animate-pulse rounded-2xl border border-slate-200 bg-white/80" />
+      </div>
+    </div>
+  </main>
+);
+
 export const Dashboard = () => {
   const [range, setRange] = useState<TimeRange>("30D");
   const { series, filteredPoints, isLoading, error } = useExchangeRates(pairSymbol, range);
 
   if (isLoading) {
-    return (
-      <main className="mx-auto flex min-h-screen max-w-7xl items-center justify-center px-4 py-12 text-slate-200">
-        Loading Reaisify...
-      </main>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (error || !series) {
@@ -47,6 +60,8 @@ export const Dashboard = () => {
             snapshot={series.snapshot}
             base={series.pair.base}
             quote={series.pair.quote}
+            source={series.latest.source}
+            updatedAt={series.updatedAt}
           />
           <SignalCard signal={series.signal} />
         </div>
@@ -63,6 +78,7 @@ export const Dashboard = () => {
             points={filteredPoints}
             title={`${series.pair.base}/${series.pair.quote} rate path`}
             source={series.history.source}
+            updatedAt={series.history.updatedAt}
           />
         </section>
 
