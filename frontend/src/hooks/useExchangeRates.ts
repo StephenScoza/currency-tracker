@@ -6,6 +6,7 @@ export const useExchangeRates = (pairSymbol: string, range: TimeRange) => {
   const [series, setSeries] = useState<FxDashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let isActive = true;
@@ -35,7 +36,7 @@ export const useExchangeRates = (pairSymbol: string, range: TimeRange) => {
     return () => {
       isActive = false;
     };
-  }, [pairSymbol, range]);
+  }, [pairSymbol, range, reloadKey]);
 
   const filteredPoints = useMemo(() => {
     if (!series) {
@@ -50,5 +51,6 @@ export const useExchangeRates = (pairSymbol: string, range: TimeRange) => {
     filteredPoints,
     isLoading,
     error,
+    retry: () => setReloadKey((currentKey) => currentKey + 1),
   };
 };

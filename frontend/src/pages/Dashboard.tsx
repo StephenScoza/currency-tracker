@@ -3,6 +3,7 @@ import { AlertRuleForm } from "../components/AlertRuleForm";
 import { Converter } from "../components/Converter";
 import { DashboardHeader } from "../components/DashboardHeader";
 import { DashboardFooter } from "../components/DashboardFooter";
+import { EmptyState } from "../components/EmptyState";
 import { ExchangeChart } from "../components/ExchangeChart";
 import { RateCard } from "../components/RateCard";
 import { SignalCard } from "../components/SignalCard";
@@ -33,7 +34,7 @@ const DashboardSkeleton = () => (
 
 export const Dashboard = () => {
   const [range, setRange] = useState<TimeRange>("30D");
-  const { series, filteredPoints, isLoading, error } = useExchangeRates(pairSymbol, range);
+  const { series, filteredPoints, isLoading, error, retry } = useExchangeRates(pairSymbol, range);
 
   if (isLoading) {
     return <DashboardSkeleton />;
@@ -41,10 +42,21 @@ export const Dashboard = () => {
 
   if (error || !series) {
     return (
-      <main className="mx-auto flex min-h-screen max-w-3xl items-center justify-center px-4 py-12">
-        <div className="rounded-[24px] border border-danger/30 bg-danger/10 p-6 text-danger">
-          {error ?? "Unable to load exchange data."}
-        </div>
+      <main className="mx-auto flex min-h-screen max-w-3xl items-center justify-center px-4 py-12 text-ink">
+        <EmptyState
+          tone="danger"
+          title="FX data needs a quick refresh"
+          message={error ?? "Unable to load exchange data. The backend may still be starting, or the provider cache may be unavailable."}
+          action={
+            <button
+              type="button"
+              onClick={retry}
+              className="rounded-xl bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-ocean"
+            >
+              Retry dashboard
+            </button>
+          }
+        />
       </main>
     );
   }
