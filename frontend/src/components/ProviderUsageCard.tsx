@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { getProviderUsage } from "../services/fxService";
 import type { ProviderUsageSnapshot } from "../types/currency";
+import { Icon } from "./Icon";
+import { InfoPopover } from "./InfoPopover";
 
 const formatUsageTimestamp = (timestamp?: string) => {
   if (!timestamp) {
@@ -47,7 +49,15 @@ export const ProviderUsageCard = () => {
     <section className="rounded-2xl border border-slate-200 bg-white p-5 text-ink shadow-glow">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Provider Credits</p>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-surf p-2 text-mint">
+              <Icon name="cache" className="h-4 w-4" />
+            </span>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Provider Credits</p>
+            <InfoPopover label="Explain provider credits" title="Credit tracking">
+              Usage is captured from provider response headers when available. Manual refresh is intentionally not automatic because it may spend a credit.
+            </InfoPopover>
+          </div>
           <h2 className="mt-2 text-xl font-semibold text-ink">Twelve Data usage</h2>
           <p className="mt-1 text-sm leading-6 text-slate-600">
             Best-known quota data captured from backend-only provider calls.

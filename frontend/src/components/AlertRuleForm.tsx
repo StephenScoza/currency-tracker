@@ -7,6 +7,8 @@ import {
   sendDiscordTest,
 } from "../services/fxService";
 import type { AlertDeliveryLog, AlertRule } from "../types/currency";
+import { Icon } from "./Icon";
+import { InfoPopover } from "./InfoPopover";
 
 interface AlertRuleFormProps {
   pairSymbol: string;
@@ -115,7 +117,15 @@ export const AlertRuleForm = ({ pairSymbol }: AlertRuleFormProps) => {
     <section className="max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
       <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Alert Rules</p>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-surf p-2 text-mint">
+              <Icon name="bell" className="h-4 w-4" />
+            </span>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Alert Rules</p>
+            <InfoPopover label="Explain alert rules" title="Alert behavior">
+              Alerts are checked by the backend scheduler and only notify when the rate crosses from below your target to above it.
+            </InfoPopover>
+          </div>
           <h3 className="mt-2 text-xl font-semibold text-ink">Discord opportunity alerts</h3>
           <p className="mt-2 text-sm leading-6 text-slate-600">
             Persist target rules and send polished Discord messages when USD/BRL crosses your threshold.

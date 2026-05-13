@@ -1,5 +1,7 @@
 import type { FxSnapshot } from "../types/currency";
 import { formatPercent, formatRate, formatSignedNumber } from "../utils/formatters";
+import { Icon } from "./Icon";
+import { InfoPopover } from "./InfoPopover";
 
 interface RateCardProps {
   snapshot: FxSnapshot;
@@ -14,7 +16,15 @@ export const RateCard = ({ snapshot, base, quote }: RateCardProps) => {
     <section className="max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
       <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Current Exchange Rate</p>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-surf p-2 text-mint">
+              <Icon name="chart" className="h-4 w-4" />
+            </span>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Current Exchange Rate</p>
+            <InfoPopover label="Explain current exchange rate" title="Rate context">
+              The rate shows how many Brazilian reais one US dollar buys before transfer provider fees or FX spreads.
+            </InfoPopover>
+          </div>
           <h2 className="mt-3 text-4xl font-bold text-ink">{formatRate(snapshot.currentRate)}</h2>
           <p className="mt-2 text-sm text-slate-600">1 {base} buys this many {quote}</p>
         </div>

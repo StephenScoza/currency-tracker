@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import type { CurrencyPair } from "../types/currency";
 import { formatCurrency, formatPercent, formatRate } from "../utils/formatters";
 import { estimateTransferFees } from "../utils/transferFees";
+import { Icon } from "./Icon";
+import { InfoPopover } from "./InfoPopover";
 
 interface ConverterProps {
   pair: CurrencyPair;
@@ -70,7 +72,15 @@ export const Converter = ({ pair, rate }: ConverterProps) => {
       <div className="mt-6 rounded-2xl border border-slate-200 bg-sand p-4">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="text-sm font-semibold text-ink">Transfer fee estimates</div>
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-white p-2 text-mint">
+                <Icon name="wallet" className="h-4 w-4" />
+              </span>
+              <div className="text-sm font-semibold text-ink">Transfer fee estimates</div>
+              <InfoPopover label="Explain transfer fee estimates" title="Fee estimate inputs">
+                Presets combine fixed fees, percentage fees, and FX spread assumptions. Use your own fee when you have a real quote.
+              </InfoPopover>
+            </div>
             <div className="mt-1 text-xs leading-5 text-slate-500">
               Preset rules only. Provider fees and FX spreads can change before a real transfer quote.
             </div>
