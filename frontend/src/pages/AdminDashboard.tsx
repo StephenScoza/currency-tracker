@@ -3,6 +3,7 @@ import { DashboardFooter } from "../components/DashboardFooter";
 import { ProviderUsageCard } from "../components/ProviderUsageCard";
 import { RuntimeLogCard } from "../components/RuntimeLogCard";
 import { SystemStatusStrip } from "../components/SystemStatusStrip";
+import { Icon } from "../components/Icon";
 
 const pairSymbol = "usd-brl";
 
@@ -37,7 +38,12 @@ export const AdminDashboard = () => (
       <RuntimeLogCard />
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Provider Strategy</p>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-surf p-2 text-mint">
+            <Icon name="shield" className="h-4 w-4" />
+          </span>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Provider Strategy</p>
+        </div>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <div className="rounded-xl border border-slate-200 bg-sand p-4">
             <div className="font-semibold text-ink">Latest rates</div>

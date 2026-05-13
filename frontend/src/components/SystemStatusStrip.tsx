@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getSystemStatus } from "../services/fxService";
 import type { SystemStatus } from "../types/currency";
+import { Icon } from "./Icon";
 
 const formatDuration = (milliseconds?: number) => {
   if (!milliseconds) {
@@ -45,18 +46,23 @@ export const SystemStatusStrip = () => {
   }, []);
 
   const items = [
-    { label: "Live FX", active: status?.liveFxConfigured },
-    { label: "Discord", active: status?.discordConfigured },
-    { label: "Disk Cache", active: status?.fxCachePersistence },
-    { label: "Latest TTL", value: formatDuration(status?.latestCacheTtlMs) },
-    { label: "Scheduler", value: formatDuration(status?.alertPollIntervalMs) },
+    { label: "Live FX", active: status?.liveFxConfigured, icon: "globe" as const },
+    { label: "Discord", active: status?.discordConfigured, icon: "bell" as const },
+    { label: "Disk Cache", active: status?.fxCachePersistence, icon: "cache" as const },
+    { label: "Latest TTL", value: formatDuration(status?.latestCacheTtlMs), icon: "clock" as const },
+    { label: "Scheduler", value: formatDuration(status?.alertPollIntervalMs), icon: "shield" as const },
   ];
 
   return (
     <section className="grid min-w-0 gap-3 rounded-2xl border border-slate-200 bg-white p-3 text-ink shadow-glow md:grid-cols-5">
       {items.map((item) => (
         <div key={item.label} className="min-w-0 rounded-xl border border-slate-200 bg-sand px-4 py-3">
-          <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slatebrand">{item.label}</div>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-white p-1.5 text-mint">
+              <Icon name={item.icon} className="h-3.5 w-3.5" />
+            </span>
+            <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slatebrand">{item.label}</div>
+          </div>
           <div className="mt-1 flex items-center gap-2 text-sm font-semibold">
             {"active" in item ? (
               <>

@@ -47,7 +47,7 @@ foreach ($capture in $captures) {
     --disable-gpu `
     --no-sandbox `
     --hide-scrollbars `
-    --timeout=5000 `
+    --timeout=10000 `
     "--window-size=$($capture.WindowSize)" `
     "--screenshot=$outputPath" `
     $capture.Url | Out-Null

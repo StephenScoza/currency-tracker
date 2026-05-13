@@ -21,7 +21,7 @@ export const Dashboard = () => {
   if (isLoading) {
     return (
       <main className="mx-auto flex min-h-screen max-w-7xl items-center justify-center px-4 py-12 text-slate-200">
-        Loading Currency Tracker...
+        Loading Reaisify...
       </main>
     );
   }

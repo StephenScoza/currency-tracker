@@ -35,7 +35,12 @@ export const Converter = ({ pair, rate }: ConverterProps) => {
     <section className="max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Conversion Calculator</p>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-surf p-2 text-mint">
+              <Icon name="dollar" className="h-4 w-4" />
+            </span>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Conversion Calculator</p>
+          </div>
           <h3 className="mt-2 text-xl font-semibold text-ink">Estimate your transfer outcome</h3>
           <p className="mt-2 text-sm leading-6 text-slate-600">
             Model a transfer using the latest backend-proxied {pair.base}/{pair.quote} rate.

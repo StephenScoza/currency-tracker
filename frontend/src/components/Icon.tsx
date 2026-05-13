@@ -5,7 +5,11 @@ type IconName =
   | "chart"
   | "chevronUp"
   | "clock"
+  | "dollar"
+  | "globe"
   | "info"
+  | "server"
+  | "shield"
   | "spark"
   | "wallet";
 
@@ -49,11 +53,39 @@ const paths: Record<IconName, JSX.Element> = {
       <path d="M12 7v5l3 2" />
     </>
   ),
+  dollar: (
+    <>
+      <path d="M12 2v20" />
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+    </>
+  ),
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a13.5 13.5 0 0 1 0 18" />
+      <path d="M12 3a13.5 13.5 0 0 0 0 18" />
+    </>
+  ),
   info: (
     <>
       <circle cx="12" cy="12" r="9" />
       <path d="M12 11v6" />
       <path d="M12 7h.01" />
+    </>
+  ),
+  server: (
+    <>
+      <rect x="4" y="4" width="16" height="6" rx="2" />
+      <rect x="4" y="14" width="16" height="6" rx="2" />
+      <path d="M8 7h.01" />
+      <path d="M8 17h.01" />
+    </>
+  ),
+  shield: (
+    <>
+      <path d="M12 3 5 6v5c0 4.5 3 8.4 7 10 4-1.6 7-5.5 7-10V6l-7-3Z" />
+      <path d="m9 12 2 2 4-4" />
     </>
   ),
   spark: (

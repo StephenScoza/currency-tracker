@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import type { FxPoint } from "../types/currency";
 import { formatDate, formatRate } from "../utils/formatters";
+import { Icon } from "./Icon";
 
 interface ExchangeChartProps {
   points: FxPoint[];
@@ -20,7 +21,12 @@ export const ExchangeChart = ({ points, title = "USD/BRL rate path", source }: E
   <section className="rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
     <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Historical Trend</p>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-surf p-2 text-mint">
+            <Icon name="chart" className="h-4 w-4" />
+          </span>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Historical Trend</p>
+        </div>
         <h3 className="mt-2 text-xl font-semibold text-ink">{title}</h3>
       </div>
       <div className="rounded-full border border-slate-200 bg-sand px-3 py-1 text-sm font-medium text-slate-600">

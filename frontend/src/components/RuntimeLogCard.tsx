@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getRuntimeLogs } from "../services/fxService";
 import type { RuntimeLogEntry } from "../types/currency";
+import { Icon } from "./Icon";
 
 const formatLogTime = (time?: number) => {
   if (!time) {
@@ -41,7 +42,12 @@ export const RuntimeLogCard = () => {
     <section className="rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Runtime Logs</p>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-surf p-2 text-mint">
+              <Icon name="server" className="h-4 w-4" />
+            </span>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Runtime Logs</p>
+          </div>
           <h2 className="mt-2 text-xl font-semibold text-ink">Persisted rotating logs</h2>
           <p className="mt-1 text-sm leading-6 text-slate-600">
             Pino JSONL logs stored under the Docker-persisted runtime volume.
