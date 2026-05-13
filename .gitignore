@@ -8,4 +8,5 @@ frontend/vite.config.js
 backend/runtime/*.json
 backend/runtime/*.log
 backend/runtime/logs/
+backend/.tmp-tests/
 .qa/
