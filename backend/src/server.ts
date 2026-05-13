@@ -3,7 +3,9 @@ import cors from "cors";
 import express from "express";
 import { alertRoutes } from "./routes/alertRoutes.js";
 import { fxRoutes } from "./routes/fxRoutes.js";
+import { statusRoutes } from "./routes/statusRoutes.js";
 import { startAlertScheduler } from "./services/alertScheduler.js";
+import { getSystemStatus } from "./services/statusService.js";
 
 const app = express();
 const port = Number(process.env.PORT ?? 7001);
@@ -14,13 +16,13 @@ app.use(express.json());
 app.get("/health", (_request, response) => {
   response.json({
     status: "ok",
-    service: "currency-tracker-api",
-    timestamp: new Date().toISOString(),
+    ...getSystemStatus(),
   });
 });
 
 app.use("/fx", fxRoutes);
 app.use("/alerts", alertRoutes);
+app.use("/status", statusRoutes);
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Currency Tracker API listening on http://0.0.0.0:${port}`);

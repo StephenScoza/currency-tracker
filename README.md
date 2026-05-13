@@ -119,6 +119,10 @@ Reserved future services can be enabled later using the `future` compose profile
 
 Returns API health metadata.
 
+### `GET /status`
+
+Returns runtime flags for live FX, Discord webhook configuration, alert storage, and scheduler interval.
+
 ### `GET /fx/usd-brl/latest`
 
 Returns the latest proxied USD/BRL rate from Twelve Data when configured, otherwise the mock provider.
@@ -149,6 +153,10 @@ Creates a new alert rule.
 ### `DELETE /alerts/:id`
 
 Deletes an alert rule.
+
+### `POST /alerts/test-discord`
+
+Sends a manual Discord test notification using the latest rate and signal for a pair. This is intended for validating webhook setup without waiting for a threshold crossing.
 
 ## Signal Engine Logic
 

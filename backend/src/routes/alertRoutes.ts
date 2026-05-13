@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { createAlert, deleteAlert, listAlerts } from "../services/alertService.js";
-import { getLatestRate } from "../services/fxService.js";
+import { sendOpportunityNotification } from "../services/discordService.js";
+import { getLatestRate, getSignal } from "../services/fxService.js";
 
 export const alertRoutes = Router();
 
@@ -35,6 +36,33 @@ alertRoutes.post("/", async (request, response) => {
   } catch (error) {
     response.status(500).json({
       error: error instanceof Error ? error.message : "Failed to create alert.",
+    });
+  }
+});
+
+alertRoutes.post("/test-discord", async (request, response) => {
+  try {
+    const pairSymbol = String(request.body.pairSymbol ?? "usd-brl").toLowerCase();
+    const latest = await getLatestRate(pairSymbol);
+    const signal = await getSignal(pairSymbol);
+    const data = await sendOpportunityNotification(
+      {
+        id: "manual-test",
+        pairSymbol,
+        targetRate: latest.rate,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        isActive: true,
+        lastObservedState: "ABOVE",
+      },
+      latest,
+      signal,
+    );
+
+    response.json({ data });
+  } catch (error) {
+    response.status(500).json({
+      error: error instanceof Error ? error.message : "Failed to send Discord test.",
     });
   }
 });

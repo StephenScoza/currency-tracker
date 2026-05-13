@@ -72,3 +72,5 @@ export const sendOpportunityNotification = async (
   await appendLogLine(DELIVERY_LOG_FILE, JSON.stringify(logEntry));
   return logEntry;
 };
+
+export const isDiscordConfigured = () => Boolean(process.env.DISCORD_WEBHOOK_URL?.trim());
