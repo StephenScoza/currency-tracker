@@ -41,7 +41,7 @@ export const AdminDashboard = () => (
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <div className="rounded-xl border border-slate-200 bg-sand p-4">
             <div className="font-semibold text-ink">Latest rates</div>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Twelve Data first, then Frankfurter, then mock fallback.</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Twelve Data first while credits are above reserve, then Frankfurter, then mock fallback.</p>
           </div>
           <div className="rounded-xl border border-slate-200 bg-sand p-4">
             <div className="font-semibold text-ink">Historical charts</div>

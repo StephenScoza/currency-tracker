@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getProviderUsage, refreshProviderUsage } from "../services/fxService";
-import type { ProviderUsageSnapshot } from "../types/currency";
+import { getProviderUsage, getSystemStatus, refreshProviderUsage } from "../services/fxService";
+import type { ProviderUsageSnapshot, SystemStatus } from "../types/currency";
 import { Icon } from "./Icon";
 import { InfoPopover } from "./InfoPopover";
 
@@ -18,6 +18,7 @@ interface ProviderUsageCardProps {
 
 export const ProviderUsageCard = ({ showRefreshAction = false }: ProviderUsageCardProps) => {
   const [usage, setUsage] = useState<ProviderUsageSnapshot | null>(null);
+  const [status, setStatus] = useState<SystemStatus | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,9 +27,10 @@ export const ProviderUsageCard = ({ showRefreshAction = false }: ProviderUsageCa
 
     const loadUsage = async () => {
       try {
-        const data = await getProviderUsage();
+        const [usageData, statusData] = await Promise.all([getProviderUsage(), getSystemStatus()]);
         if (isActive) {
-          setUsage(data);
+          setUsage(usageData);
+          setStatus(statusData);
           setError(null);
         }
       } catch (loadError) {
@@ -51,7 +53,9 @@ export const ProviderUsageCard = ({ showRefreshAction = false }: ProviderUsageCa
   const used = usage?.apiCreditsUsed;
   const left = usage?.apiCreditsLeft;
   const limit = usage?.apiCreditLimit;
+  const reserve = status?.twelveDataCreditReserve;
   const usagePercent = used !== undefined && limit ? Math.min(100, Math.round((used / limit) * 100)) : null;
+  const isReserveActive = left !== undefined && reserve !== undefined && reserve > 0 && left <= reserve;
 
   const refreshUsage = async () => {
     const confirmed = window.confirm(
@@ -82,7 +86,7 @@ export const ProviderUsageCard = ({ showRefreshAction = false }: ProviderUsageCa
             </span>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Provider Credits</p>
             <InfoPopover label="Explain provider credits" title="Credit tracking">
-              Usage is captured from provider response headers when available. Manual refresh is intentionally not automatic because it may spend a credit.
+              Usage is captured from provider response headers when available. Automatic Twelve Data calls stop when credits left are at or below the reserve threshold.
             </InfoPopover>
           </div>
           <h2 className="mt-2 text-xl font-semibold text-ink">Twelve Data usage</h2>
@@ -107,7 +111,7 @@ export const ProviderUsageCard = ({ showRefreshAction = false }: ProviderUsageCa
         </div>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-xl border border-slate-200 bg-sand p-4">
           <div className="text-xs text-slate-500">Credits used</div>
           <div className="mt-2 text-2xl font-bold text-ink">{used ?? "--"}</div>
@@ -119,6 +123,12 @@ export const ProviderUsageCard = ({ showRefreshAction = false }: ProviderUsageCa
         <div className="rounded-xl border border-slate-200 bg-sand p-4">
           <div className="text-xs text-slate-500">Plan limit</div>
           <div className="mt-2 text-2xl font-bold text-ink">{limit ?? "--"}</div>
+        </div>
+        <div className={`rounded-xl border p-4 ${isReserveActive ? "border-danger/30 bg-danger/10" : "border-slate-200 bg-sand"}`}>
+          <div className="text-xs text-slate-500">Auto-call reserve</div>
+          <div className={`mt-2 text-2xl font-bold ${isReserveActive ? "text-danger" : "text-ink"}`}>
+            {reserve ?? "--"}
+          </div>
         </div>
       </div>
 
@@ -134,6 +144,16 @@ export const ProviderUsageCard = ({ showRefreshAction = false }: ProviderUsageCa
       <div className="mt-4 text-xs leading-5 text-slate-500">
         Updated {formatUsageTimestamp(usage?.updatedAt)}. Manual provider usage refreshes are available via the backend, but are not called automatically because they can spend an API credit.
       </div>
+
+      {isReserveActive ? (
+        <div className="mt-3 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm leading-6 text-danger">
+          Credit reserve is active. Automatic latest-rate calls will skip Twelve Data and use fallback providers until usage is refreshed or the reserve is changed.
+        </div>
+      ) : reserve !== undefined ? (
+        <div className="mt-3 rounded-xl border border-mint/20 bg-surf px-4 py-3 text-sm leading-6 text-slate-700">
+          Automatic Twelve Data calls are allowed while known credits stay above the {reserve}-credit reserve.
+        </div>
+      ) : null}
 
       {error ? (
         <div className="mt-3 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
