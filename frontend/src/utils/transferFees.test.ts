@@ -9,6 +9,8 @@ describe("estimateTransferFees", () => {
 
     expect(estimates.map((estimate) => estimate.rule.id)).toEqual([
       "wise-estimate",
+      "tap-tap-send-estimate",
+      "sendwave-estimate",
       "remittance-app-estimate",
       "bank-wire-estimate",
     ]);
@@ -18,6 +20,10 @@ describe("estimateTransferFees", () => {
     expect(wise.netAmountUsd).toBeCloseTo(989.75);
     expect(wise.effectiveRate).toBeCloseTo(4.9);
     expect(wise.recipientAmountBrl).toBeCloseTo(4849.775);
+
+    const tapTap = estimates[1];
+    expect(tapTap.feeUsd).toBeCloseTo(0);
+    expect(tapTap.effectiveRate).toBeCloseTo(4.8461);
   });
 
   it("applies exchange-rate markup separately from provider fees", () => {

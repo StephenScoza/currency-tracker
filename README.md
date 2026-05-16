@@ -287,7 +287,7 @@ The backend uses Pino with `pino-roll` for structured persisted logs. Logs are w
 
 ## Transfer Fee Estimates
 
-The converter includes configurable transfer provider presets for comparing estimated BRL received after fees. Current presets model fixed fees, percentage fees, and FX spread/markup separately for scenarios like Wise-style transfers, remittance apps, and bank wires.
+The converter includes configurable transfer provider presets for comparing estimated BRL received after fees. Current presets model fixed fees, percentage fees, and FX spread/markup separately for scenarios like Wise-style transfers, Tap Tap Send, Sendwave, remittance apps, and bank wires.
 
 Users can also enter a custom percentage fee and fixed USD fee when they already know their provider's pricing. This makes the calculator useful for comparing a real quote against the preset scenarios.
 
