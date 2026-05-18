@@ -2,9 +2,9 @@ import { AdminTools } from "../components/AdminTools";
 import { CacheStatusCard } from "../components/CacheStatusCard";
 import { DashboardFooter } from "../components/DashboardFooter";
 import { ProviderUsageCard } from "../components/ProviderUsageCard";
+import { ProviderPriorityCard } from "../components/ProviderPriorityCard";
 import { RuntimeLogCard } from "../components/RuntimeLogCard";
 import { SystemStatusStrip } from "../components/SystemStatusStrip";
-import { Icon } from "../components/Icon";
 
 const pairSymbol = "usd-brl";
 
@@ -40,28 +40,7 @@ export const AdminDashboard = () => (
 
       <RuntimeLogCard />
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 text-ink shadow-glow">
-        <div className="flex items-center gap-2">
-          <span className="rounded-full bg-surf p-2 text-mint">
-            <Icon name="shield" className="h-4 w-4" />
-          </span>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slatebrand">Provider Strategy</p>
-        </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
-          <div className="rounded-xl border border-slate-200 bg-sand p-4">
-            <div className="font-semibold text-ink">Latest rates</div>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Twelve Data first while credits are above reserve, then Brazil-focused and keyless fallbacks before mock data.</p>
-          </div>
-          <div className="rounded-xl border border-slate-200 bg-sand p-4">
-            <div className="font-semibold text-ink">Historical charts</div>
-            <p className="mt-2 text-sm leading-6 text-slate-600">BCB PTAX first for official Brazil reference data, then free/keyless time-series providers before Twelve Data.</p>
-          </div>
-          <div className="rounded-xl border border-slate-200 bg-sand p-4">
-            <div className="font-semibold text-ink">Manual controls</div>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Refresh buttons warn before using endpoints that may spend credits.</p>
-          </div>
-        </div>
-      </section>
+      <ProviderPriorityCard />
 
       <DashboardFooter />
     </div>
