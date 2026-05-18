@@ -6,7 +6,7 @@ import { alertPollIntervalMs, shouldRunAlertCheckOnStartup } from "../config/fxC
 let schedulerHandle: NodeJS.Timeout | null = null;
 let isRunning = false;
 
-const runAlertCheck = async () => {
+export const runAlertCheckOnce = async () => {
   if (isRunning) {
     return;
   }
@@ -56,10 +56,10 @@ export const startAlertScheduler = () => {
   }
 
   schedulerHandle = setInterval(() => {
-    void runAlertCheck();
+    void runAlertCheckOnce();
   }, intervalMs);
 
   if (shouldRunAlertCheckOnStartup()) {
-    void runAlertCheck();
+    void runAlertCheckOnce();
   }
 };
